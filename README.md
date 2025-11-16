@@ -1,16 +1,62 @@
-# React + Vite
+Responsive Notes App:-
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project is a simple notes management web application built using React, Vite, and Tailwind CSS.
+The app allows users to create, edit, delete, search, and categorize notes.
+All data is stored in the browser using localStorage, and some initial notes are loaded from a JSON file.
 
-Currently, two official plugins are available:
+Features:-
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Add, edit, and delete notes
+Sidebar for category selection
+Filter notes by category
+Search notes by title or description
+Sort notes (Newest, Oldest, A–Z)
+Dark and light mode
+Responsive layout for both mobile and desktop
+Notes stored in localStorage
+Import/Export notes support
+Basic duplicate title handling
 
-## React Compiler
+Technologies Used:-
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+React
+Vite
+Tailwind CSS
+Day.js
+localStorage API
 
-## Expanding the ESLint configuration
+Folder Structure:-
+responsive-notes-app/
+│
+├── public/
+│
+├── src/
+│   ├── components/
+│   │   ├── Header.jsx
+│   │   ├── Sidebar.jsx
+│   │   ├── NoteCard.jsx
+│   │   └── NoteModal.jsx
+│   │
+│   ├── data/
+│   │   └── notes.json
+│   │
+│   ├── utils/
+│   │   └── storage.js
+│   │
+│   ├── App.jsx
+│   ├── main.jsx
+│   └── index.css
+│
+├── tailwind.config.cjs
+├── package.json
+└── README.md
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Deployment
+
+This project was deployed using Vercel.
+Basic Vercel settings:
+Framework: Vite
+Build command: npm run build
+Output directory: dist
+
+Live demo link:- https://responsive-notes-app.vercel.app/
