@@ -16,3 +16,12 @@ html, body, #root { height: 100%; }
 .modal-backdrop { background: rgba(2,6,23,0.6); }
 
 .smooth { transition: all 200ms ease; }
+
+html.dark {
+  background-color: #0a0f1a !important;  /* very dark navy */
+}
+
+html.dark body,
+html.dark #root {
+  background-color: #0a0f1a !important;
+}
