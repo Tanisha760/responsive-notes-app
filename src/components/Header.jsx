@@ -2,7 +2,8 @@ import React from 'react'
 
 const Header = ({ search, setSearch, sort, setSort, dark, toggleDark }) => {
   return (
-    <header className="w-full py-4 px-4 md:px-6 rounded-b-lg">
+     <header className="w-full py-4 px-4 md:px-6 rounded-b-lg bg-white/90 dark:bg-slate-800/90">
+
       <div className="flex items-center justify-between gap-4 max-w-7xl mx-auto">
         <div className="flex items-center gap-4">
           <div className="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[var(--accent-from)] to-[var(--accent-to)]">
@@ -24,9 +25,9 @@ const Header = ({ search, setSearch, sort, setSort, dark, toggleDark }) => {
             <option value="alpha">Title A–Z</option>
           </select>
 
-          <button onClick={toggleDark} aria-label="toggle theme" className="px-3 py-2 rounded-md bg-white/90 dark:bg-slate-700 smooth">
-            {dark ? '🌙' : '☀️'}
-          </button>
+          <button onClick={toggleDark}>
+  {dark ? "🌙" : "☀️"}
+</button>
         </div>
       </div>
     </header>

@@ -17,12 +17,27 @@ function App() {
   // new UI states
   const [search, setSearch] = useState('')
   const [sort, setSort] = useState('new')
-  const [dark, setDark] = useState(() => localStorage.getItem('notes-theme') === 'dark')
+  // Dark Mode State
+const [dark, setDark] = useState(() => {
+  return localStorage.getItem("notes-theme") === "dark";
+});
 
-  useEffect(()=> {
-    document.documentElement.classList.toggle('dark', dark)
-    localStorage.setItem('notes-theme', dark ? 'dark' : 'light')
-  }, [dark])
+// Apply theme on load + when changed
+useEffect(() => {
+  if (dark) {
+    document.documentElement.classList.add("dark");
+    localStorage.setItem("notes-theme", "dark");
+  } else {
+    document.documentElement.classList.remove("dark");
+    localStorage.setItem("notes-theme", "light");
+  }
+}, [dark]);
+
+// Toggle Function
+function toggleDark() {
+  setDark(prev => !prev);
+}
+
 
   useEffect(() => {
     const persisted = loadNotesFromStorage()
