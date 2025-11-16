@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react'
 import Sidebar from './components/Sidebar'
 import NoteCard from './components/NoteCard'
 import NoteModal from './components/NoteModal'
+import Header from './components/Header'
 import { loadNotesFromStorage, saveNotesToStorage } from './utils/storage'
 import defaultNotes from './data/notes.json'
 
@@ -12,6 +13,16 @@ function App() {
   const [activeCategory, setActiveCategory] = useState('All Notes')
   const [modalOpen, setModalOpen] = useState(false)
   const [editing, setEditing] = useState(null)
+
+  // new UI states
+  const [search, setSearch] = useState('')
+  const [sort, setSort] = useState('new')
+  const [dark, setDark] = useState(() => localStorage.getItem('notes-theme') === 'dark')
+
+  useEffect(()=> {
+    document.documentElement.classList.toggle('dark', dark)
+    localStorage.setItem('notes-theme', dark ? 'dark' : 'light')
+  }, [dark])
 
   useEffect(() => {
     const persisted = loadNotesFromStorage()
@@ -33,9 +44,22 @@ function App() {
     return merged
   }, [notes])
 
+  const counts = useMemo(()=>{
+    const map = {}
+    notes.forEach(n => { map[n.category] = (map[n.category] || 0) + 1 })
+    return map
+  }, [notes])
+
   function filteredNotes() {
-    if (activeCategory === 'All Notes') return notes.slice().sort((a,b)=> new Date(b.createdAt) - new Date(a.createdAt))
-    return notes.filter(n => n.category === activeCategory).sort((a,b)=> new Date(b.createdAt) - new Date(a.createdAt))
+    let list = activeCategory === 'All Notes' ? [...notes] : notes.filter(n => n.category === activeCategory)
+    if (search.trim()) {
+      const q = search.toLowerCase()
+      list = list.filter(n => n.title.toLowerCase().includes(q) || n.description.toLowerCase().includes(q))
+    }
+    if (sort === 'new') list.sort((a,b)=> new Date(b.createdAt) - new Date(a.createdAt))
+    if (sort === 'old') list.sort((a,b)=> new Date(a.createdAt) - new Date(b.createdAt))
+    if (sort === 'alpha') list.sort((a,b)=> a.title.localeCompare(b.title))
+    return list
   }
 
   function handleCreateClick() {
@@ -77,23 +101,34 @@ function App() {
     setNotes(prev => prev.filter(n => n.id !== note.id))
   }
 
+  function toggleDark(){ setDark(d => !d) }
+
   return (
-    <div className="min-h-screen flex">
-      <Sidebar categories={categories} active={activeCategory} onSelect={setActiveCategory} />
+    <div className="min-h-screen flex bg-gray-50 dark:bg-slate-900 text-gray-900 dark:text-white">
+      <Sidebar categories={categories} active={activeCategory} onSelect={setActiveCategory} counts={counts} />
 
       <main className="flex-1 p-4">
         <div className="max-w-7xl mx-auto">
-          <div className="flex items-center justify-between mb-4">
+          <Header search={search} setSearch={setSearch} sort={sort} setSort={setSort} dark={dark} toggleDark={toggleDark} />
+
+          <div className="flex items-center justify-between mt-4 mb-4">
             <h1 className="text-2xl font-bold">{activeCategory === 'All Notes' ? 'All Notes' : activeCategory}</h1>
             <div className="flex items-center gap-2">
-              <button onClick={handleCreateClick} className="px-4 py-2 bg-blue-600 text-white rounded">+ New Note</button>
+              <button onClick={handleCreateClick} className="px-4 py-2 bg-gradient-to-r from-[var(--accent-from)] to-[var(--accent-to)] text-white rounded shadow">+ New Note</button>
               <button onClick={() => { localStorage.removeItem('notes-app-v1'); window.location.reload() }} className="px-3 py-2 border rounded">Reset</button>
+              <button onClick={()=>{
+                const blob = new Blob([JSON.stringify(notes, null, 2)], {type:'application/json'});
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url; a.download = 'notes-export.json'; a.click();
+                URL.revokeObjectURL(url);
+              }} className="px-3 py-2 border rounded">Export</button>
             </div>
           </div>
 
           {filteredNotes().length === 0 ? (
             <div className="text-center py-10">
-              <p className="text-gray-600">No notes in this category. Click "New Note" to add one.</p>
+              <p className="text-gray-600 dark:text-gray-300">No notes in this category. Click "New Note" to add one.</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
